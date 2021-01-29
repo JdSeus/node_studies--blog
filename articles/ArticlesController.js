@@ -86,6 +86,9 @@ router.post("/articles/update", (req,res) => {
 
 router.get("/articles/page/:num", (req, res) => {
     var page = req.params.num;
+    var next = false;
+    var previous = false;
+    var numberpages;
     var offset = 0;
     var limit = 4;
     if (isNaN(page) || page == 1) {
@@ -100,19 +103,30 @@ router.get("/articles/page/:num", (req, res) => {
         limit: limit,
         offset: offset
     }).then((articles) => {
-        var next;
+
         if (offset + limit >= articles.count) {
             next = false;
         } else {
             next = true;
         }
-        var result = {
+
+        if (page > 1) {
+            previous = true;
+        } else {
+            previous = false;
+        }
+
+        numberpages = Math.ceil(articles.count / limit);
+
+        var pagination = {
             page: parseInt(page),
             next: next,
+            previous: previous,
+            numberpages: numberpages,
             articles: articles,
         }
         Category.findAll().then((categories) => {
-            res.render("admin/articles/page",{result: result, categories: categories});
+            res.render("admin/articles/page",{pagination: pagination, categories: categories});
         }); 
     });
 });
