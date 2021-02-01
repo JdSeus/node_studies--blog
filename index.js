@@ -5,9 +5,11 @@ const connection = require("./database/database")
 
 const CategoriesController = require("./categories/CategoriesController");
 const ArticlesController = require("./articles/ArticlesController");
+const UsersController = require("./users/UsersController");
 
 const Category = require("./categories/Category");
 const Article = require("./articles/Article");
+const User = require("./users/User");
 
 //View engine
 app.set('view engine', 'ejs');
@@ -34,6 +36,7 @@ connection
 
 app.use("/", CategoriesController);
 app.use("/", ArticlesController);
+app.use("/",UsersController);
 
 app.get("/", (req, res) => {
     var limit = 4;
